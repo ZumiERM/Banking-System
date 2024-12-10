@@ -1,0 +1,264 @@
+//This is purely on java, currently using NetBeans as my IDE
+
+import java.util.Scanner;
+import java.util.Date;
+
+public class BankingSystem {
+    
+    //utils
+    static Scanner input = new Scanner(System.in);
+    static Date now = new Date();
+    
+    //main variables
+    static String email = "";
+    static String password = "";
+    static String line = "=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=\n";
+    static double balance = 0;
+    static double tax = 0.02; //this is the tax / service fee of the withdrawal
+    
+    //main method
+    public static void main(String[] args) {
+        
+        //Greet User
+        System.out.println(line);
+        greetUser();
+        
+        //User Make Account
+        System.out.println(line);
+        userSignUp(input);
+        System.out.println(line);
+        
+        //User Will Login
+        userLogin(input);
+        System.out.println(line);
+        
+        //Ask a user if transac
+        askIfTransaction(input);
+        System.out.println(line);
+
+        input.close();
+    }
+    
+    //Greet User method
+    public static void greetUser(){
+        System.out.println("Welcome user to Banking Simulation BETA!");
+        System.out.println("Default Balance: " + balance);
+        System.out.println();
+    }
+    
+    //userSignUp
+    public static void userSignUp(Scanner input){
+        System.out.println("Sign-up: ");
+        email = createEmail(input);
+        password = createPassword(input);
+        System.out.println();
+        System.out.println("Account Successfully Created!");
+        System.out.println();
+    }
+    
+    //email
+    public static String createEmail(Scanner input) {
+        
+        //variables for createEmail method
+        String userEmail = "user@gmail.com";
+        
+            while (true) {
+            System.out.println("");
+            System.out.print("Create email: ");
+            userEmail = input.next();
+
+            if (!userEmail.contains("@gmail.com")) {
+                System.out.println("Error: Email must contain '@gmail.com', please try again.");
+                }
+            else {
+                break;
+                }
+            }
+        return userEmail;
+    }
+    //password
+    public static String createPassword(Scanner input) {
+        //variables for createEmail method
+        String userPassword = "default";
+        
+            while (true) {
+            System.out.println("");
+            System.out.print("Create password: ");
+            userPassword = input.next();
+
+            if (userPassword.length() < 8){
+                System.out.println("Error: Password too short, please try again.");
+            }
+            else {
+                break;
+                }
+            
+            }
+        return userPassword;
+    }
+    
+    //userLogin
+    public static void userLogin(Scanner input){
+        
+        //variable in userLogin
+        boolean emailLoop = true;
+        boolean passwordLoop = true;
+        
+        String userEmail = "";
+        String userPassword = "";
+        
+        System.out.println("Login: ");
+        
+        while (emailLoop == true) {
+            System.out.println();
+            System.out.print("Enter Email: ");
+            userEmail = input.next();
+            if (userEmail.equals(email)) {
+                emailLoop = false;
+            } else {
+                System.out.println("Error: Email does not match, please try again.");
+            }
+        }
+        
+        while (passwordLoop == true) {
+            System.out.println();
+            System.out.print("Enter Password: ");
+            userPassword = input.next();
+            if (userPassword.equals(password)) {
+                passwordLoop = false;
+            } else {
+                System.out.println("Error: Password does not match, please try again.");
+            }
+        }
+        System.out.println();
+        System.out.println("Login Successful!");
+        System.out.println();
+        System.out.println("Default Balance: Php: " + balance);
+        System.out.println();
+    }
+    
+    //askIfTransaction
+    public static void askIfTransaction(Scanner input) {
+        
+        //variables in askIfTransaction
+        String userReply = "";
+        
+        while (true) {
+            System.out.print("Would you like to make a transaction? (YES/NO): ");
+            userReply = input.next();
+            System.out.println();
+            if (userReply.equalsIgnoreCase("yes") || userReply.equalsIgnoreCase("y")) {
+                //ask if withdraw/deposit/cancel
+                askIfWithdrawDeposit(input);
+            } else if (userReply.equalsIgnoreCase("no") || userReply.equalsIgnoreCase("n")) {
+                //ask if exit
+                break;
+            } else {
+                System.out.println("Error: Invalid response, please try again.");
+                System.out.println();
+            }
+        }
+        
+        System.out.println(line);
+        System.out.println("FINAL BALANCE ON LEAVE: ");
+        System.out.println("Balance: " + balance);
+        System.out.println("Date of leave: " + now);
+        System.out.println();
+        System.out.println(line);
+        System.out.println("THANK YOU SO MUCH FOR USING THIS BANK SIMULATION SYSTEM");
+        System.out.println("MADE BY ERVON REY Q. MELLISA / ZUMI");
+        System.out.println();
+    }
+    
+    //askIfWithdraw/Deposit
+    public static void askIfWithdrawDeposit(Scanner input) {
+        //variable
+        String action = "default";
+        
+        while (true) {
+            System.out.println();
+            System.out.println("What would you like to perform?");
+            System.out.println("A. Deposit Money");
+            System.out.println("B. Withdraw Money");
+            System.out.println("C. Cancel Transaction");
+            System.out.print("Select Action: ");
+            action = input.next();
+
+            if (action.equalsIgnoreCase("A") || action.equalsIgnoreCase("deposit")) {
+                //perform deposit
+                performDeposit(input);
+            } else if (action.equalsIgnoreCase("B") || action.equalsIgnoreCase("withdraw")) {
+                //perform withdraw
+                performWithdraw(input);
+            } else if (action.equalsIgnoreCase("C") || action.equalsIgnoreCase("cancel")) {
+                System.out.println("\n\n\n\n\n\n\n");
+                System.out.println("Leaving...");
+                System.out.println("Confirm you want to exit by responding 'NO or n'");
+                System.out.println("\n\n");
+                break;
+            } else {
+                System.out.println("Error: Invalid response, please try again.");
+                System.out.println();
+            }
+        }
+    }
+    
+    //perform Deposit
+    public static double performDeposit(Scanner input) {
+        //variables
+        double deposit = 0;
+        
+        System.out.println("");
+        System.out.print("Enter amount to deposit: P");
+        deposit = input.nextDouble();
+        balance += deposit;
+        
+        System.out.println("\n\n");
+        System.out.println(line);
+        System.out.println("Deposit Successful!");
+        System.out.println("Date of Deposit: " + now);
+        System.out.println();
+        System.out.println("RECEIPT OF DEPOSIT:");
+        System.out.println("Current Balance: P" + balance);
+        System.out.println("");
+        System.out.println(line);
+        System.out.println("\n\n\n\n");
+        return deposit;
+    }
+    
+    //perform Withdraw
+    public static double performWithdraw(Scanner input) {
+        
+        double reqWithdraw = 0;
+        double reqWithdrawTax = 0;
+        
+        System.out.println("");
+        System.out.print("Enter amount to withdraw: P");
+        reqWithdraw = input.nextDouble();
+        reqWithdrawTax = reqWithdraw * tax;
+        balance -= reqWithdraw + reqWithdrawTax;
+        
+        if (balance <= 0) {
+            System.out.println("Error: Insufficient amount of balance.");
+            balance += reqWithdraw + reqWithdrawTax;
+            System.out.println("Current Balance: P" + balance);
+            return 0; 
+        } else {
+            System.out.println("\n\n\n\n");
+                System.out.println(line);
+                System.out.println("Withdrawal Successful!");
+                System.out.println("Date of Withdrawal: " + now);
+                System.out.println();
+                System.out.println("RECEIPT OF WITHDRAWAL:");
+                System.out.println("Withdrawal Amount: P" + reqWithdraw);
+                System.out.println("Tax: " + reqWithdrawTax);
+                System.out.println("Current Balance: P" + balance);
+                System.out.println();
+                System.out.println(line);
+                System.out.println("\n\n\n\n");
+            return balance;
+        }
+        
+        
+    }
+}
